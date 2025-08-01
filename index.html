@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MattQ's portfolio</title>
+  <link rel="icon" href="/assets/images/icon.png">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  
+  <style>
+    /* Base styles */
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+      background: #111;
+      color: #fff;
+      font-family: 'Poppins', sans-serif;
+    }
+    /* menu in basso */
+    .bottom-menu {
+      position: fixed;
+      bottom: 30px;
+      height: 6vw;
+      left: 50%;
+      width: 60%;
+      transform: translateX(-50%);
+      background: linear-gradient(45deg, #222, #111);
+      padding: 10px 30px;
+      border-radius: 30px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+      z-index: 1000;
+      display: flex;
+      gap: 2.5vw;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      animation: fadeInUp 1s forwards;
+    }
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+      }
+    }
+    .bottom-menu a {
+      text-decoration: none;
+      color: #fff;
+      font-size: 1.4vw;
+      padding: 8px 6px;
+      border-radius: 5px;
+      text-align: center;
+      transition: background 0.3s, transform 0.3s, box-shadow 0.3s;
+      display: inline-block;
+    }
+    .bottom-menu a:hover {
+      background: rgba(255, 0, 0, 0.3);
+      transform: translateY(-3px);
+      box-shadow: 0 4px 10px rgba(255,0,0,0.3);
+    }
+    /* Sezioni */
+    .section {
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      perspective: 1000px;
+      position: relative;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+    /* Sezione Hero: profile card */
+    .hero-section {
+      height: 100vh;
+    }
+    .hero-card {
+      background: #1a1a1a;
+      border-radius: 20px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.7);
+      width: 90%;
+      max-width: 600px;
+      height: 600px;
+      padding: 40px;
+      position: relative;
+      transition: transform 0.6s ease, opacity 0.6s ease;
+      transform-style: preserve-3d;
+      transform: rotateY(15deg);
+      opacity: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+    .hero-card.active {
+      transform: rotateY(0deg);
+      opacity: 1;
+    }
+    .profile-img-large {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      border: 4px solid rgba(255,0,0,0.8);
+      box-shadow: 0 0 20px rgba(255,0,0,0.8);
+      object-fit: cover;
+      margin-bottom: 20px;
+      animation: float 3s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-20px); }
+    }
+    .hero-card h1 {
+      margin: 10px 0;
+      font-size: 2.8em;
+      letter-spacing: 2px;
+    }
+    .hero-card p {
+      margin: 10px 0 30px;
+      font-size: 1.2em;
+      opacity: 0.8;
+    }
+    .social-links {
+      display: flex;
+      gap: 30px;
+      font-size: 2em;
+    }
+    .social-links a {
+      color: #fff;
+      transition: color 0.3s, transform 0.3s;
+    }
+    .social-links a:hover {
+      color: #ff5555;
+      transform: scale(1.2);
+    }
+    /* Stile comune per le card */
+    .card {
+      background: #1a1a1a;
+      border-radius: 10px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      width: 80%;
+      max-width: 800px;
+      padding: 40px;
+      transition: transform 0.6s ease, opacity 0.6s ease;
+      transform-style: preserve-3d;
+      transform: rotateY(15deg);
+      opacity: 0;
+      overflow-y: auto;
+    }
+    .card.active {
+      transform: rotateY(0deg);
+      opacity: 1;
+    }
+    /* Effetto glow */
+    .glow {
+      text-shadow: 0 0 20px rgba(255, 0, 0, 0.8);
+    }
+    /* sezione Me */
+    .profile-img {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      border: 4px solid rgba(255,0,0,0.8);
+      box-shadow: 0 0 20px rgba(255,0,0,0.8);
+      margin-bottom: 20px;
+      object-fit: cover;
+    }
+    /* immagini dei progetti */
+    .project-image {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 5px;
+      margin-bottom: 15px;
+    }
+    .project-details {
+      font-size: 14px;
+      line-height: 1.5;
+    }
+    /* Stile modulo contatti */
+    .contact-form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      margin-top: 20px;
+    }
+    .contact-form input, .contact-form textarea {
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+    .contact-form button {
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      background: #ff0000;
+      color: #fff;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .contact-form button:hover {
+      background: #cc0000;
+    }
+    .card ul {
+      padding-left: 20px;
+      margin: 10px 0;
+    }
+    .card ul li {
+      margin-bottom: 8px;
+    }
+    .card a {
+      color: #ff5555;
+      text-decoration: none;
+    }
+    .card a:hover {
+      text-decoration: underline;
+    }
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 10px;
+    }
+    .gallery img {
+      width: 100%;
+      border-radius: 5px;
+      
+    }
+    /* icone social */
+    .social-icon {
+      width: 1em;
+      height: 1em;
+      vertical-align: middle;
+      transition: transform 0.3s, filter 0.3s;
+      filter: brightness(0) invert(1);
+    }
+    .social-icon:hover {
+      transform: scale(1.1);
+      filter: brightness(1) invert(0);
+    }
+
+    /* MEDIA QUERIES PER LA RESPONSIVITÀ */
+
+    @media (max-width: 768px) {
+      .hero-card {
+        width: 95%;
+        max-width: 95%;
+        height: auto;
+        padding: 20px;
+      }
+      .hero-card h1 {
+        font-size: 2em;
+      }
+      .hero-card p {
+        font-size: 1em;
+      }
+      .profile-img-large {
+        width: 120px;
+        height: 120px;
+      }
+      .social-links {
+        gap: 20px;
+        font-size: 1.5em;
+      }
+      .bottom-menu {
+        padding: 8px 20px;
+        font-size: 14px;
+      }
+      .card {
+        padding: 20px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .hero-card {
+        padding: 10px;
+      }
+      .hero-card h1 {
+        font-size: 1.8em;
+      }
+      .hero-card p {
+        font-size: 0.9em;
+      }
+      .profile-img-large {
+        width: 100px;
+        height: 100px;
+      }
+      .social-links {
+        gap: 15px;
+        font-size: 1.3em;
+      }
+      .bottom-menu {
+        padding: 4px 10px;
+        gap: 8px;
+        font-size: 12px;
+        max-width: 90vw;
+      }
+      .card {
+        padding: 15px;
+      }
+    }
+
+
+    /* gallery */
+
+    .gallery img{
+      transform: scale(1);
+      transition: transform 0.3s;
+    }
+
+    .gallery img:hover {
+      cursor: zoom-in;
+      opacity: 0.5;
+      transform: scale(1.05);
+      transition: transform 0.3s, opacity 0.5s;
+    }
+    .lightbox {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.8);
+      width: 90%;
+      height: 90%;
+      backdrop-filter: blur(10px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s, transform 0.3s, visibility 0.3s;
+      z-index: 2000;
+    }
+    .lightbox.active {
+      opacity: 1;
+      visibility: visible;
+      transform: translate(-50%, -50%) scale(1);
+    }
+    .lightbox img {
+      max-width: 100%;
+      max-height: 100%;
+      border-radius: 5px;
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- Nuovo menu in basso -->
+  <div class="bottom-menu">
+    <a href="#section1"><b>Home</b></a>
+    <a href="#section2"><b>Me</b></a>
+    <a href="#section3"><b>My Games</b></a>
+    <a href="#section4"><b>UI/UX</b></a>
+    <a href="#section5"><b>Graphics</b></a>
+    <a href="#section6"><b>Contacts</b></a>
+  </div>
+
+  <!-- Contenitore delle sezioni -->
+  <div id="container">
+    <!-- Section 1: Hero/Profile Card -->
+    <section id="section1" class="section hero-section">
+      <div class="hero-card">
+        <img class="profile-img-large" src="assets/images/avatarwithoutbg.png" alt="MattQ's Avatar" draggable="false">
+        <h1 class="glow">MattQ</h1>
+        <p>Developer &amp; Creator</p>
+        <div class="social-links">
+          <a href="https://discord.gg/ETgCMSps4c" target="_blank" title="Discord"><i class="fab fa-discord"></i></a>
+          <a href="mailto:mattqdevv@gmail.com" title="Email"><i class="fas fa-envelope"></i></a>
+          <a href="https://x.com/mattqdev" target="_blank" title="X/Twitter"><i class="fab fa-x-twitter"></i></a>
+          <a href="https://www.roblox.com/users/2992118050" target="_blank" title="Roblox">
+            <img class="social-icon" src="assets/images/roblox.svg" alt="Roblox Icon">
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 2: Me -->
+    <section id="section2" class="section">
+      <div class="card">
+        <h2 class="glow">📌 About Me</h2>
+        <ul>
+          <li>🔹 <strong>Nickname:</strong> <a href="https://www.roblox.com/users/2992118050" target="_blank">MattQ (@mattqdev)</a></li>
+          <li>🔹 <strong>Role:</strong> Scripter / Game Designer / UI Designer / Graphic Designer</li>
+          <li>🔹 <strong>Experience:</strong> 3 years</li>
+          <li>
+            🔹 <strong>Results</strong> (last update: May 2025):
+            <ul>
+              <li>🔹 <strong>Total Visits</strong> (only games owned by me): <strong>3.4M</strong></li>
+              <li>🔹 <strong>Total Members</strong> (only groups owned by me): <strong>88K</strong></li>
+              <li>🔹 <strong>Roblox Followers</strong> (@mattqdev): <strong>15.2K</strong></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </section>
+    
+    <!-- Section 3: My Games (Scripting and Game Design) -->
+    <section id="section3" class="section">
+      <div class="card">
+        <h2 class="glow">🖥️ Scripting and Game Design</h2>
+        <p>
+          This is my primary skill and my greatest passion. Having been almost exclusively a solo dev except for rare cases, I am accustomed to independently developing entire game systems. Specialized mainly in <strong>simulator</strong> and <strong>casual games</strong>, but I am ready to broaden my horizons.
+          In all these games except "Switch Color or die" I was the main creator and developer, as well as the current owner. I like to organize code in a neat and well-modularized manner.
+        </p>
+        <p><strong>Reference Projects:</strong></p>
+        <ul>
+          <li>🎮 <a href="https://www.roblox.com/games/17359625840" target="_blank">Brawl Stars Pet Simulator</a> – 3.2M Visits</li>
+          <li>🎮 <a href="https://www.roblox.com/games/18960452199" target="_blank">Brawl Stars RNG</a> – 61K Visits</li>
+          <li>🎮 <a href="https://www.roblox.com/games/18763191813" target="_blank">Cube Generator</a> – 175 Visits</li>
+          <li>🎮 <a href="https://www.roblox.com/games/17717218221" target="_blank">Switch Color or die</a> – 20K Visits</li>
+          <li>🎮 <a href="https://www.roblox.com/games/17717218221" target="_blank">Switch Color or die</a> – 20K Visits</li>
+          <li>🎮 Sword io – coming soon</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Section 4: UI/UX Design -->
+    <section id="section4" class="section">
+      <div class="card">
+        <h2 class="glow">🎨 UI/UX Design (Interfaces &amp; User Experience)</h2>
+        <p>
+          I design modern and intuitive UIs, optimized for <strong>PC, Mobile, and Console</strong> devices. I have created 3 free plugins for the community that have received positive feedback, and I especially focused on their interfaces.
+        </p>
+        <p><strong>Reference Projects:</strong></p>
+        <ul>
+          <li>🎮 <a href="https://www.roblox.com/games/17359625840" target="_blank">Brawl Stars Pet Simulator</a> – 3.3M Visits</li>
+          <li>🎮 <a href="https://www.roblox.com/games/18960452199" target="_blank">Brawl Stars RNG</a> – 51K Visits</li>
+          <li>🎮 <a href="https://www.roblox.com/games/18763191813" target="_blank">Cube Generator</a> – 157 Visits</li>
+          <li>🔧 <a href="https://devforum.roblox.com/t/3193651" target="_blank">Plugin UI Assistant</a> – 600 downloads</li>
+          <li>🔧 <a href="https://devforum.roblox.com/t/3416936" target="_blank">Plugin Performance Heatmap</a> – 100 downloads</li>
+          <li>🔧 <a href="https://devforum.roblox.com/t/3260283" target="_blank">Plugin Assets Previewer</a> – 30 downloads</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Section 5: Graphic Design -->
+    <section id="section5" class="section">
+      <div class="card">
+        <h2 class="glow">🖼️ Graphic Design (Icons, thumbnails, etc.)</h2>
+        <p>
+          As a solo dev, I have almost always created the graphics myself; here are some of my works:
+        </p>
+        <div class="gallery">
+          <img src="assets/pics/Icon.png" alt="Brawl Stars Simulator Icon" draggable="false">
+          <img src="assets/pics/RoGamesIcon.png" alt="ThumbnailChristmas" draggable="false">
+          <img src="assets/pics/1stIcon.png" alt="1stIcon" draggable="false">
+          <img src="assets/pics/Let It Snow Contest.png" alt="Let It Snow Contest" draggable="false">
+          <img src="assets/pics/Ollie.png" alt="Ollie" draggable="false">
+          <img src="assets/pics/radarpass.png" alt="radarpass" draggable="false">
+          <img src="assets/pics/vippass.png" alt="vippass" draggable="false">
+          <img src="assets/pics/x2.png" alt="x2 Power" draggable="false">
+          <img src="assets/pics/ThumbnailChristmas.png" alt="ThumbnailChristmas" draggable="false" width="200%">
+          <img src="assets/pics/BannerPluginWide.png" alt="BannerPluginWide" draggable="false" width="200%">
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 6: Contacts & Work -->
+    <section id="section6" class="section">
+      <div class="card">
+        <h2 class="glow">💼 Work &amp; Contacts</h2>
+        <p>
+          I am available for paid commissions with negotiable prices that naturally vary based on the work required. Payment only in Robux. For longer-term collaborations, I might also accept revenue shares, but that depends on the situation.
+        </p>
+        <p>
+          <strong>Why choose me?</strong><br>
+          Since these are my first commissions, I don't ask for much: for a very modest fee, you can get a complete and well-crafted project. I am very open to revising the work if the initial result is not satisfactory, and I love what I do beyond the compensation.
+        </p>
+        <p>
+          For work inquiries or collaborations, feel free to contact me:
+        </p>
+        <ul>
+          <li>🔹 <a href="https://discord.gg/ETgCMSps4c" target="_blank">Discord Server</a>: active almost every day, DMs open @ mattqdev.</li>
+          <li>🔹 <a href="mailto:mattqdevv@gmail.com">Mail</a>: I don't check it often but I do reply.</li>
+          <li>🔹 <a href="https://x.com/mattqdev" target="_blank">Account X</a>: profile with rather casual posts, but I also reply there.</li>
+        </ul>
+        <p>Thank you very much for your attention! ❤️</p>
+      </div>
+    </section>
+  </div>
+
+  <div class="lightbox" id="lightbox">
+    <img src="" alt="">
+  </div>
+
+
+  <script>
+    const sections = document.querySelectorAll('.section');
+    const heroCard = document.querySelector('.hero-card');
+    const cards = document.querySelectorAll('.card');
+    let currentSection = 0;
+    let isScrolling = false;
+    const scrollDelay = 1200; 
+    const scrollAnimation = 500; 
+    let scrollAccumulated = 0;
+    const scrollThreshold = 1; // Soglia per cambiare sezione
+
+    function scrollToSection(index) {
+      if(index < 0 || index >= sections.length) return;
+      sections[index].scrollIntoView({ behavior: 'smooth' });
+      currentSection = index;
+      
+      if(heroCard) heroCard.classList.remove('active');
+      cards.forEach(card => card.classList.remove('active'));
+      
+      setTimeout(() => {
+        if(index === 0) {
+          heroCard.classList.add('active');
+        } else {
+          cards[index - 1].classList.add('active');
+        }
+      }, scrollAnimation);
+    }
+
+    window.addEventListener('wheel', function(e) {
+      e.preventDefault();
+      
+      scrollAccumulated += e.deltaY;
+      
+      if ((scrollAccumulated > 0 && e.deltaY < 0) || (scrollAccumulated < 0 && e.deltaY > 0)) {
+        scrollAccumulated = e.deltaY;
+      }
+
+      console.log(scrollAccumulated);
+      
+      if (isScrolling) return;
+      
+      if (scrollAccumulated >= scrollThreshold) {
+        isScrolling = true;
+        console.log("Changing section (down)");
+        scrollToSection(currentSection + 1);
+        scrollAccumulated = 0;
+        setTimeout(() => { isScrolling = false; }, scrollDelay);
+      } else if (scrollAccumulated <= -scrollThreshold) {
+        isScrolling = true;
+        console.log("Changing section (up)");
+        scrollToSection(currentSection - 1);
+        scrollAccumulated = 0;
+        setTimeout(() => { isScrolling = false; }, scrollDelay);
+      }
+    }, { passive: false });
+
+    document.querySelectorAll('.bottom-menu a').forEach(link => {
+      link.addEventListener('click', function(e) {
+        e.preventDefault();
+        const targetId = this.getAttribute('href').substring(1);
+        const targetIndex = Array.from(sections).findIndex(section => section.id === targetId);
+        scrollToSection(targetIndex);
+      });
+    });
+
+    window.onload = () => {
+      if(heroCard) heroCard.classList.add('active');
+    };
+      
+      let touchStartY = 0;
+      let touchEndY = 0;
+
+      document.addEventListener("touchstart", (event) => {
+        touchStartY = event.touches[0].clientY;
+      });
+
+      document.addEventListener("touchmove", (event) => {
+        touchEndY = event.touches[0].clientY;
+      });
+
+      document.addEventListener("touchend", () => {
+        let deltaY = touchStartY - touchEndY;
+
+        if (deltaY > 50) {
+          scrollToNextSection();
+        } else if (deltaY < -50) {
+          scrollToPreviousSection();
+        }
+      });
+  </script>
+
+  <script>
+    const lightbox = document.getElementById("lightbox");
+    const lightboxImg = lightbox.querySelector("img");
+    document.querySelectorAll(".gallery img").forEach(img => {
+      img.addEventListener("click", () => {
+        if (lightbox.classList.contains("active")) {
+          lightbox.classList.remove("active");
+        } else {
+          lightboxImg.src = img.src;
+          lightbox.classList.add("active");
+        }
+      });
+    });
+    lightbox.addEventListener("click", () => {
+      lightbox.classList.remove("active");
+    });
+  </script>
+</body>
+</html>
